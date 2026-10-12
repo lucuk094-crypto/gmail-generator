@@ -4,7 +4,7 @@
   "private": true,
   "description": "Website email sementara (temp mail) live dari generator.email — Developed by Van313 | Official",
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   },
   "scripts": {
     "start": "node server.mjs",

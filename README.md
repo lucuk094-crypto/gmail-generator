@@ -14,7 +14,7 @@ lib/scraper.mjs     -> logika scraper generator.email (dipakai lokal & Vercel)
 server.mjs          -> server lokal untuk pratinjau (Node 18+, tanpa dependensi)
 api/*.mjs           -> serverless functions Vercel (/api/generate, /api/inbox, /api/message, /api/domains, /api/health)
 vercel.json         -> konfigurasi Vercel (header cache); runtime Node bawaan otomatis
-package.json        -> engines Node 20.x untuk serverless functions
+package.json        -> engines Node 24.x untuk serverless functions (wajib Vercel)
 test-parse.mjs      -> uji unit fungsi parser
 ```
 
@@ -30,7 +30,7 @@ node server.mjs       # buka http://localhost:3000
 1. Push proyek ini ke repository GitHub (atau GitLab/Bitbucket).
 2. Di [vercel.com](https://vercel.com) → **Add New… → Project** → import repo tersebut.
 3. Vercel mendeteksi otomatis: static `index.html` + serverless `api/` (runtime Node bawaan,
-   versi Node 20 dari `package.json` engines). Tidak perlu setting apa pun.
+   versi Node 24 dari `package.json` engines — wajib, karena Vercel sudah tidak menerima Node 20).
 4. Deploy. Selesai — frontend memanggil `/api/...` relatif, jadi langsung cocok di domain Vercel Anda.
 
 Alternatif lewat CLI:
