@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Van313 | Official">
+<title>Generator.Email — Temporary Email, Real Freedom</title>
+<link rel="icon" type="image/jpeg" href="/logo.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root{
+    --bg:#04050d;
+    --bg-soft:#080a18;
+    --panel:#0a0d1e;
+    --card:#0d1126;
+    --card2:#12163a;
+    --line:rgba(124,110,255,.16);
+    --line2:rgba(124,110,255,.38);
+    --text:#f0f1ff;
+    --muted:#a7aed0;
+    --dim:#6f78a4;
+    --pri:#7c5cff;
+    --pri2:#8b5cf6;
+    --blue:#4d6bff;
+    --grad:linear-gradient(90deg,#4d6bff 0%,#8b5cf6 100%);
+    --grad-text:linear-gradient(90deg,#7d7bff 0%,#a78bfa 60%,#8b5cf6 100%);
+    --green:#2dd881;
+    --pink:#e454e4;
+    --shadow:0 20px 60px rgba(0,0,0,.55);
+    --glow:0 0 40px rgba(124,92,255,.22);
+    --font-body:"Plus Jakarta Sans","Inter","Segoe UI",system-ui,sans-serif;
+    --font-head:"Sora","Plus Jakarta Sans","Inter","Segoe UI",system-ui,sans-serif;
+  }
+  body[data-theme="light"]{
+    --bg:#eef0fa; --bg-soft:#e6e9f7; --panel:#ffffff; --card:#ffffff; --card2:#f2f1ff;
+    --line:rgba(90,80,220,.16); --line2:rgba(90,80,220,.4);
+    --text:#14163a; --muted:#4c5375; --dim:#7d84a6;
+    --shadow:0 20px 50px rgba(60,60,140,.18); --glow:0 0 30px rgba(124,92,255,.15);
+  }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:var(--font-body);
+    font-size:14px; line-height:1.6; overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:rgba(124,92,255,.45); }
+  .container{ max-width:1440px; margin:0 auto; padding:0 40px; }
+  svg.ic{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+  svg.ic.f{ fill:currentColor; stroke:none; }
+  button{ font-family:inherit; cursor:pointer; }
+  a{ color:inherit; text-decoration:none; }
+  h1,h2,h3,.brand-name{ font-family:var(--font-head); }
+
+  /* ============ HEADER ============ */
+  .site-header{
+    position:sticky; top:0; z-index:50;
+    background:var(--bg);
+    background:color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{ display:flex; align-items:center; gap:28px; height:68px; }
+  .brand{ display:flex; align-items:center; gap:12px; margin-right:auto; }
+  .brand-logo{
+    width:42px; height:42px; border-radius:12px; display:grid; place-items:center; overflow:hidden;
+    background:var(--grad); color:#fff; box-shadow:0 6px 18px rgba(93,78,255,.45); flex:none;
+  }
+  .brand-logo img{ width:100%; height:100%; object-fit:cover; }
+  .brand-logo svg{ width:22px; height:22px; }
+  .brand-name{ font-size:19px; font-weight:800; letter-spacing:.2px; line-height:1.15; }
+  .brand-name em{ font-style:normal; color:var(--pri2); }
+  .brand-tag{ font-size:11px; color:var(--dim); letter-spacing:.4px; }
+  .main-nav{ display:flex; gap:34px; }
+  .main-nav a{ color:var(--muted); font-size:13.5px; font-weight:600; padding:6px 2px; position:relative; transition:color .2s; }
+  .main-nav a:hover{ color:var(--text); }
+  .main-nav a.active{ color:var(--text); }
+  .main-nav a.active::after{ content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px; border-radius:2px; background:var(--grad); }
+  .header-actions{ display:flex; align-items:center; gap:14px; }
+  .theme-toggle{
+    display:flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px;
+    background:var(--card); border:1px solid var(--line); color:var(--dim); transition:border-color .2s;
+  }
+  .theme-toggle:hover{ border-color:var(--line2); }
+  .theme-toggle svg{ width:15px; height:15px; }
+  body[data-theme="dark"] .theme-toggle .t-moon{ color:var(--text); }
+  body[data-theme="light"] .theme-toggle .t-sun{ color:#f59e0b; }
+
+  .btn{
+    position:relative; overflow:hidden;
+    display:inline-flex; align-items:center; justify-content:center; gap:9px;
+    border:none; border-radius:12px; font-weight:700; font-size:13.5px;
+    padding:12px 20px; color:#fff; transition:transform .15s, box-shadow .2s, filter .2s, border-color .2s;
+  }
+  .btn:active{ transform:scale(.97); }
+  .btn-primary{ background:var(--grad); box-shadow:0 8px 24px rgba(93,78,255,.4); }
+  .btn-primary:hover{ filter:brightness(1.12); box-shadow:0 10px 30px rgba(93,78,255,.55); }
+  .btn-ghost{ background:transparent; border:1px solid var(--line2); color:var(--text); }
+  .btn-ghost:hover{ background:rgba(124,92,255,.1); }
+  .btn-dark{ background:var(--card2); border:1px solid var(--line); color:var(--text); }
+  .btn-dark:hover{ border-color:var(--line2); }
+  .btn[disabled]{ opacity:.55; pointer-events:none; }
+  .btn .spin{ width:15px; height:15px; border:2px solid rgba(255,255,255,.35); border-top-color:#fff; border-radius:50%; animation:rot .7s linear infinite; }
+  @keyframes rot{ to{ transform:rotate(360deg);} }
+  .ripple{ position:absolute; border-radius:50%; background:rgba(255,255,255,.35); transform:scale(0); animation:rip .6s ease-out forwards; pointer-events:none; }
+  @keyframes rip{ to{ transform:scale(1); opacity:0; } }
+
+  /* ============ HERO ============ */
+  .hero{ position:relative; padding:64px 0 56px; overflow:hidden; }
+  .hero::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(700px 380px at 78% 30%, rgba(93,68,255,.16), transparent 60%),
+      radial-gradient(520px 300px at 12% 8%, rgba(56,89,255,.1), transparent 60%);
+  }
+  .hero-canvas{ position:absolute; inset:0; pointer-events:none; }
+  .hero-grid{ display:grid; grid-template-columns:minmax(430px,46%) 1fr; gap:44px; position:relative; z-index:1; }
+  .hero-copy > *{ animation:fadeUp .7s cubic-bezier(.2,.7,.3,1) both; }
+  .hero-copy > *:nth-child(1){ animation-delay:.05s; }
+  .hero-copy > *:nth-child(2){ animation-delay:.15s; }
+  .hero-copy > *:nth-child(3){ animation-delay:.25s; }
+  .hero-copy > *:nth-child(4){ animation-delay:.35s; }
+  .hero-copy > *:nth-child(5){ animation-delay:.45s; }
+  .hero-badge{
+    display:inline-flex; align-items:center; gap:10px; padding:9px 18px; border-radius:999px;
+    border:1px solid var(--line2); background:rgba(124,92,255,.08); font-size:12.5px; font-weight:600; letter-spacing:.3px;
+  }
+  .hero-badge .dot-sep{ color:var(--dim); }
+  .hero-badge svg{ width:14px; height:14px; color:var(--pri2); }
+  h1{ font-size:56px; line-height:1.08; font-weight:800; letter-spacing:-1.5px; margin:26px 0 22px; }
+  h1 .grad{
+    background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent;
+    filter:drop-shadow(0 0 26px rgba(139,92,246,.4));
+  }
+  .hero-copy p.lead{ color:var(--muted); max-width:470px; font-size:14.5px; }
+  .hero-cta{ display:flex; gap:14px; margin:30px 0 36px; flex-wrap:wrap; }
+  .btn-lg{ padding:15px 26px; border-radius:13px; font-size:14px; }
+  .hero-mini{ display:flex; gap:0; align-items:center; }
+  .hero-mini .item{ display:flex; gap:12px; align-items:center; padding:0 26px; border-left:1px solid var(--line); }
+  .hero-mini .item:first-child{ padding-left:0; border-left:none; }
+  .hero-mini svg{ width:22px; height:22px; color:var(--pri2); }
+  .hero-mini b{ display:block; font-size:13.5px; }
+  .hero-mini small{ color:var(--dim); font-size:12px; }
+
+  .hero-visual{ position:relative; display:flex; gap:22px; align-items:flex-start; }
+  .art{ position:absolute; inset:-30px -20px; pointer-events:none; z-index:0; }
+  .art .blob{ position:absolute; border-radius:24px; filter:blur(2px); opacity:.8; animation:blobFloat 9s ease-in-out infinite; }
+  .art .b1{ width:120px; height:120px; right:34%; top:-6%; transform:rotate(24deg);
+      background:linear-gradient(140deg,rgba(90,70,255,.5),rgba(20,16,60,.15)); box-shadow:0 0 60px rgba(90,70,255,.35);}
+  .art .b2{ width:70px; height:70px; right:6%; top:64%; transform:rotate(-14deg); animation-delay:1.4s;
+      background:linear-gradient(140deg,rgba(64,86,255,.45),rgba(20,16,60,.1)); }
+  .art .b3{ width:46px; height:46px; left:2%; top:70%; transform:rotate(30deg); animation-delay:2.6s;
+      background:linear-gradient(140deg,rgba(228,84,228,.4),rgba(20,16,60,.1)); }
+  @keyframes blobFloat{ 0%,100%{ translate:0 0; } 50%{ translate:0 -14px; } }
+  .art .plane{ position:absolute; right:26%; top:-4%; color:var(--pri2); opacity:.9; animation:blobFloat 7s ease-in-out infinite; }
+  .art .plane svg{ width:64px; height:64px; }
+
+  .mail-wrap{ position:relative; z-index:1; flex:1.15; margin-top:84px; perspective:900px; animation:float 7s ease-in-out infinite; }
+  .mail-card{
+    background:linear-gradient(160deg,rgba(23,22,58,.92),rgba(10,10,28,.94));
+    border:1px solid var(--line2); border-radius:18px; padding:20px;
+    box-shadow:var(--shadow), var(--glow); backdrop-filter:blur(8px);
+    transition:transform .18s ease-out; transform-style:preserve-3d; will-change:transform;
+  }
+  body[data-theme="light"] .mail-card{ background:linear-gradient(160deg,#ffffff,#f3f2ff); }
+  @keyframes float{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-9px);} }
+  .mail-card-head{ display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .mini-logo{ width:30px; height:30px; border-radius:9px; background:var(--grad); display:grid; place-items:center; color:#fff; overflow:hidden; flex:none; }
+  .mini-logo img{ width:100%; height:100%; object-fit:cover; }
+  .mini-logo svg{ width:15px; height:15px; }
+  .mail-card-head b{ font-size:14px; font-family:var(--font-head); }
+  .mail-card-head b em{ font-style:normal; color:var(--pri2); }
+  .pill-active{
+    margin-left:auto; display:inline-flex; align-items:center; gap:7px;
+    font-size:11px; font-weight:700; color:var(--green);
+    border:1px solid rgba(45,216,129,.4); background:rgba(45,216,129,.08);
+    padding:5px 11px; border-radius:999px;
+  }
+  .pill-active .dot{ width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); animation:pulse 1.6s infinite; }
+  @keyframes pulse{ 0%,100%{ opacity:1;} 50%{ opacity:.35;} }
+  .mail-addr{
+    display:flex; align-items:center; gap:10px; padding:14px 16px;
+    background:rgba(4,5,16,.55); border:1px solid var(--line2); border-radius:12px;
+    font-size:15.5px; font-weight:700; letter-spacing:.2px;
+  }
+  body[data-theme="light"] .mail-addr{ background:#f4f3ff; }
+  .mail-addr span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .icon-btn{
+    display:grid; place-items:center; width:34px; height:34px; border-radius:9px; flex:none;
+    background:var(--card2); border:1px solid var(--line); color:var(--muted); transition:color .2s, border-color .2s, transform .15s;
+  }
+  .icon-btn:hover{ color:var(--text); border-color:var(--line2); transform:translateY(-1px); }
+  .icon-btn svg{ width:15px; height:15px; }
+  .mail-timer{
+    display:flex; align-items:center; gap:10px; margin-top:12px; padding:12px 16px;
+    border:1px solid var(--line); border-radius:12px; color:var(--muted); font-size:12.5px;
+  }
+  .mail-timer b{ color:var(--text); font-variant-numeric:tabular-nums; }
+  .timer-bar{ height:4px; border-radius:4px; background:var(--card2); margin-top:10px; overflow:hidden; }
+  .timer-bar i{ display:block; height:100%; width:100%; background:var(--grad); border-radius:4px; transition:width 1s linear; }
+  .mail-actions{ display:flex; gap:10px; margin-top:14px; }
+  .mail-actions .btn{ flex:1; padding:12px 8px; font-size:12.5px; }
+
+  .notif-panel{
+    position:relative; z-index:1; flex:1;
+    background:linear-gradient(170deg,rgba(16,16,40,.9),rgba(8,9,24,.95));
+    border:1px solid var(--line); border-radius:18px; padding:18px;
+    box-shadow:var(--shadow);
+  }
+  body[data-theme="light"] .notif-panel{ background:#fff; }
+  .notif-head{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:14.5px; margin-bottom:14px; font-family:var(--font-head); }
+  .notif-head svg{ width:17px; height:17px; color:var(--pri2); }
+  .notif-head .dot{ width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); animation:pulse 1.6s infinite; }
+  .notif-count{ margin-left:auto; min-width:24px; height:24px; padding:0 7px; display:grid; place-items:center; border-radius:8px; background:var(--grad); font-size:12px; font-weight:800; }
+  .notif-list{ display:flex; flex-direction:column; gap:12px; min-height:236px; }
+  .notif-item{
+    display:flex; gap:12px; padding:12px; border-radius:13px; cursor:pointer;
+    background:rgba(255,255,255,.03); border:1px solid var(--line);
+    animation:slideIn .35s cubic-bezier(.2,.7,.3,1); transition:border-color .2s, transform .2s;
+  }
+  .notif-item:hover{ border-color:var(--line2); transform:translateX(-3px); }
+  body[data-theme="light"] .notif-item{ background:#f7f7ff; }
+  @keyframes slideIn{ from{ opacity:0; transform:translateX(14px);} to{ opacity:1; transform:none;} }
+  .notif-ico{ width:38px; height:38px; border-radius:10px; display:grid; place-items:center; flex:none; }
+  .notif-ico svg{ width:19px; height:19px; }
+  .nico-mail{ background:rgba(124,92,255,.18); color:var(--pri2); }
+  .nico-gmail{ background:#fff; }
+  .nico-x{ background:#000; color:#fff; }
+  .nico-discord{ background:#5865F2; color:#fff; }
+  .nico-github{ background:#24292f; color:#fff; }
+  .notif-body{ min-width:0; flex:1; }
+  .notif-body .t{ display:flex; gap:8px; align-items:baseline; }
+  .notif-body b{ font-size:12.5px; }
+  .notif-body time{ margin-left:auto; color:var(--dim); font-size:11px; flex:none; }
+  .notif-body small{ display:block; color:var(--dim); font-size:11.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .notif-empty{ display:grid; place-items:center; text-align:center; color:var(--dim); font-size:12.5px; padding:40px 10px; gap:6px; }
+  .notif-empty .ring{ width:34px; height:34px; border-radius:50%; border:2px solid var(--line2); border-top-color:var(--pri2); animation:rot 1.4s linear infinite; margin-bottom:6px; }
+  .notif-all{ display:flex; align-items:center; gap:8px; margin-top:14px; color:var(--pri2); font-size:12.5px; font-weight:700; }
+  .notif-all:hover{ text-decoration:underline; }
+
+  /* ============ FEATURES ============ */
+  .features{ border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--bg-soft); }
+  .features-grid{ display:grid; grid-template-columns:repeat(5,1fr); }
+  .feature{ display:flex; gap:16px; padding:30px 26px; border-left:1px solid var(--line); transition:background .25s; }
+  .feature:hover{ background:rgba(124,92,255,.05); }
+  .feature:first-child{ border-left:none; }
+  .feature-ico{
+    width:52px; height:52px; border-radius:14px; flex:none; display:grid; place-items:center;
+    color:var(--pri2); background:rgba(124,92,255,.09); border:1px solid var(--line2);
+    box-shadow:inset 0 0 18px rgba(124,92,255,.12); transition:transform .25s;
+  }
+  .feature:hover .feature-ico{ transform:scale(1.08) rotate(-4deg); }
+  .feature-ico svg{ width:22px; height:22px; }
+  .feature b{ font-size:13.5px; display:flex; align-items:center; gap:8px; }
+  .badge-new{ background:var(--pink); color:#fff; font-size:9px; font-weight:800; padding:3px 7px; border-radius:6px; letter-spacing:.5px; animation:pulse 2s infinite; }
+  .feature small{ display:block; color:var(--dim); font-size:12px; margin-top:5px; }
+
+  /* ============ APP / DASHBOARD ============ */
+  .app-section{ padding:56px 0 64px; }
+  .app-window{
+    display:grid; grid-template-columns:225px 1fr 350px; gap:0;
+    border:1px solid var(--line2); border-radius:22px; overflow:hidden;
+    background:var(--panel); box-shadow:var(--shadow), 0 0 70px rgba(93,68,255,.12);
+    min-height:430px;
+  }
+  .app-side{ background:rgba(6,7,20,.6); border-right:1px solid var(--line); padding:20px 14px; display:flex; flex-direction:column; gap:6px; }
+  body[data-theme="light"] .app-side{ background:#f6f6ff; }
+  .app-side .brand{ margin:0 6px 18px; }
+  .side-btn{
+    display:flex; align-items:center; gap:11px; width:100%; text-align:left;
+    padding:11px 13px; border-radius:11px; border:none; background:transparent;
+    color:var(--muted); font-size:13px; font-weight:600; transition:background .2s, color .2s, transform .15s;
+  }
+  .side-btn svg{ width:16px; height:16px; }
+  .side-btn:hover{ background:rgba(124,92,255,.08); color:var(--text); transform:translateX(3px); }
+  .side-btn.active{ background:var(--grad); color:#fff; box-shadow:0 6px 18px rgba(93,78,255,.4); transform:none; }
+
+  .app-main{ padding:22px 24px; min-width:0; }
+  .active-line{ display:flex; align-items:center; gap:9px; color:var(--green); font-size:12px; font-weight:700; margin-bottom:12px; }
+  .active-line .dot{ width:8px; height:8px; border-radius:50%; background:var(--green); box-shadow:0 0 8px var(--green); animation:pulse 1.6s infinite; }
+  .addr-bar{
+    display:flex; align-items:center; gap:12px; padding:13px 16px;
+    background:var(--card); border:1px solid var(--line); border-radius:13px; margin-bottom:18px;
+  }
+  .addr-bar .email{ font-size:15px; font-weight:800; letter-spacing:.2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .addr-bar .right{ margin-left:auto; display:flex; align-items:center; gap:12px; }
+  .addr-bar .timer{ display:flex; align-items:center; gap:9px; color:var(--dim); font-size:11px; text-align:left; }
+  .addr-bar .timer svg{ width:16px; height:16px; color:var(--pri2); }
+  .addr-bar .timer b{ display:block; color:var(--text); font-size:13px; font-variant-numeric:tabular-nums; }
+
+  .inbox-card{ background:var(--card); border:1px solid var(--line); border-radius:13px; overflow:hidden; }
+  .inbox-head{ display:flex; align-items:center; gap:10px; padding:13px 16px; border-bottom:1px solid var(--line); font-weight:800; font-size:13px; }
+  .inbox-count{ min-width:22px; height:22px; padding:0 7px; display:grid; place-items:center; border-radius:7px; background:var(--grad); font-size:11px; font-weight:800; }
+  .search-input{
+    margin-left:auto; width:170px; padding:7px 12px; border-radius:9px; font-family:inherit; font-size:12px;
+    background:var(--card2); border:1px solid var(--line); color:var(--text); outline:none; transition:border-color .2s, width .25s;
+  }
+  .search-input:focus{ border-color:var(--line2); width:210px; }
+  .search-input::placeholder{ color:var(--dim); }
+  .inbox-head .chev{ background:none; border:none; color:var(--dim); display:grid; place-items:center; }
+  .inbox-list{ max-height:262px; overflow-y:auto; }
+  .inbox-list::-webkit-scrollbar{ width:8px; } .inbox-list::-webkit-scrollbar-thumb{ background:var(--line2); border-radius:4px; }
+  .inbox-row{
+    display:flex; align-items:center; gap:13px; width:100%; text-align:left;
+    padding:11px 16px; background:none; border:none; border-bottom:1px solid var(--line);
+    color:var(--text); transition:background .15s; animation:fadeUp .3s ease both;
+  }
+  .inbox-row:hover{ background:rgba(124,92,255,.07); }
+  .inbox-row:last-child{ border-bottom:none; }
+  .row-ico{ width:32px; height:32px; border-radius:9px; background:rgba(124,92,255,.16); color:var(--pri2); display:grid; place-items:center; flex:none; }
+  .row-ico svg{ width:15px; height:15px; }
+  .row-from{ width:200px; flex:none; font-size:12.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .row-subj{ flex:1; min-width:0; color:var(--muted); font-size:12.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .row-time{ color:var(--dim); font-size:11.5px; flex:none; }
+  .badge-baru{ background:var(--blue); color:#fff; font-size:10px; font-weight:800; padding:3px 9px; border-radius:7px; flex:none; animation:pulse 2s infinite; }
+  .inbox-empty{ padding:34px 16px; text-align:center; color:var(--dim); font-size:12.5px; }
+  .panel{ display:none; } .panel.show{ display:block; animation:fadeUp .3s ease; }
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(8px);} to{ opacity:1; transform:none;} }
+  .hist-row{ display:flex; align-items:center; gap:12px; padding:12px 4px; border-bottom:1px solid var(--line); font-size:12.5px; }
+  .hist-row .email{ font-weight:700; }
+  .hist-row time{ color:var(--dim); font-size:11px; }
+  .hist-row .btn{ margin-left:auto; padding:7px 13px; font-size:11.5px; border-radius:9px; }
+  .hist-del{ background:none; border:none; color:var(--dim); display:grid; place-items:center; }
+  .hist-del:hover{ color:#ff6b6b; }
+  .set-row{ display:flex; align-items:center; justify-content:space-between; gap:14px; padding:14px 4px; border-bottom:1px solid var(--line); font-size:13px; }
+  .set-row small{ display:block; color:var(--dim); }
+  select.sel{ background:var(--card2); color:var(--text); border:1px solid var(--line2); border-radius:9px; padding:8px 12px; font-family:inherit; font-size:12.5px; outline:none; }
+  .about-txt{ color:var(--muted); font-size:13px; padding:8px 4px; }
+  .about-txt b{ color:var(--text); }
+  .stat-chips{ display:flex; gap:12px; margin:12px 0; flex-wrap:wrap; }
+  .stat-chip{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px 18px; }
+  .stat-chip b{ font-size:20px; font-family:var(--font-head); background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .stat-chip small{ display:block; color:var(--dim); font-size:11px; }
+  .dev-credit{ display:inline-flex; align-items:center; gap:8px; margin-top:10px; padding:8px 14px; border-radius:999px; border:1px solid var(--line2); background:rgba(124,92,255,.08); font-size:12px; font-weight:700; }
+  .dev-credit em{ font-style:normal; background:var(--grad-text); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+  .app-privacy{
+    border-left:1px solid var(--line); padding:28px 26px; position:relative; overflow:hidden;
+    background:
+      radial-gradient(300px 220px at 85% 30%, rgba(93,68,255,.16), transparent 65%),
+      var(--card);
+  }
+  .app-privacy h3{ font-size:22px; line-height:1.25; font-weight:800; letter-spacing:-.3px; }
+  .app-privacy p{ color:var(--muted); font-size:12.5px; margin:14px 0 18px; max-width:270px; }
+  .check-list{ display:flex; flex-direction:column; gap:11px; }
+  .check-list .li{ display:flex; align-items:center; gap:11px; font-size:12.5px; font-weight:600; }
+  .check-box{ width:20px; height:20px; border-radius:6px; background:var(--grad); display:grid; place-items:center; color:#fff; }
+  .check-box svg{ width:11px; height:11px; }
+  .priv-art{ position:absolute; right:-14px; top:52px; width:190px; height:190px; opacity:.95; pointer-events:none; animation:blobFloat 8s ease-in-out infinite; }
+
+  /* ============ FOOTER ============ */
+  .site-footer{ border-top:1px solid var(--line); background:var(--bg-soft); }
+  .footer-inner{ display:flex; align-items:center; gap:26px; padding:26px 0; flex-wrap:wrap; }
+  .footer-inner .brand{ margin:0; }
+  .footer-inner .brand-logo{ width:36px; height:36px; border-radius:10px; }
+  .footer-inner .brand-name{ font-size:16px; }
+  .foot-tag{ color:var(--dim); font-size:12px; padding-left:26px; border-left:1px solid var(--line); }
+  .foot-right{ margin-left:auto; display:flex; align-items:center; gap:18px; color:var(--dim); font-size:11.5px; flex-wrap:wrap; }
+  .socials{ display:flex; gap:12px; }
+  .socials a{ color:var(--dim); transition:color .2s, transform .2s; display:inline-flex; }
+  .socials a:hover{ color:var(--pri2); transform:translateY(-2px); }
+  .socials svg{ width:15px; height:15px; }
+  .dev-line b{ color:var(--pri2); }
+
+  /* ============ TOAST & MODAL ============ */
+  .toasts{ position:fixed; top:80px; right:22px; z-index:90; display:flex; flex-direction:column; gap:12px; width:330px; }
+  .toast{
+    display:flex; gap:12px; padding:13px 14px; border-radius:14px; cursor:pointer;
+    background:linear-gradient(160deg,rgba(24,22,60,.97),rgba(10,10,30,.98));
+    border:1px solid var(--line2); box-shadow:var(--shadow); animation:slideIn .3s cubic-bezier(.2,.7,.3,1);
+    transition:opacity .4s, transform .3s;
+  }
+  .toast:hover{ transform:translateX(-4px); }
+  .toast.err{ border-color:rgba(255,90,90,.5); }
+  .toast .notif-body small{ white-space:normal; }
+  .modal-ov{ position:fixed; inset:0; z-index:100; background:rgba(2,3,10,.7); backdrop-filter:blur(6px); display:none; place-items:center; padding:20px; }
+  .modal-ov.show{ display:grid; }
+  .modal{
+    width:min(640px,100%); max-height:82vh; overflow:auto;
+    background:var(--panel); border:1px solid var(--line2); border-radius:18px; padding:24px;
+    box-shadow:var(--shadow); animation:fadeUp .25s ease;
+  }
+  .modal::-webkit-scrollbar{ width:8px; } .modal::-webkit-scrollbar-thumb{ background:var(--line2); border-radius:4px; }
+  .modal-head{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .modal-head h3{ font-size:16px; }
+  .modal-head .icon-btn{ margin-left:auto; }
+  .msg-meta{ display:flex; flex-direction:column; gap:4px; padding:14px 16px; background:var(--card); border:1px solid var(--line); border-radius:12px; margin-bottom:14px; font-size:12.5px; color:var(--muted); }
+  .msg-meta b{ color:var(--text); font-size:14px; }
+  .msg-body{ white-space:pre-wrap; color:var(--muted); font-size:13px; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; }
+  .msg-codes{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  .chip{
+    display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border-radius:999px;
+    background:rgba(45,216,129,.1); border:1px solid rgba(45,216,129,.4); color:var(--green);
+    font-size:12px; font-weight:800; letter-spacing:.5px; font-variant-numeric:tabular-nums;
+  }
+  .chip svg{ width:13px; height:13px; }
+  .chip:hover{ background:rgba(45,216,129,.2); }
+  .msg-links{ margin-top:14px; display:flex; flex-direction:column; gap:8px; }
+  .msg-links a{ color:var(--pri2); font-size:12.5px; word-break:break-all; font-weight:600; }
+  .msg-links a:hover{ text-decoration:underline; }
+  .faq-item{ border:1px solid var(--line); border-radius:12px; padding:15px 17px; margin-bottom:12px; background:var(--card); transition:border-color .2s; }
+  .faq-item:hover{ border-color:var(--line2); }
+  .faq-item b{ font-size:13.5px; display:block; margin-bottom:7px; color:var(--text); }
+  .faq-item p{ color:var(--muted); font-size:12.5px; }
+  .field{ margin-bottom:14px; }
+  .field label{ display:block; font-size:12px; font-weight:700; margin-bottom:7px; color:var(--muted); }
+  .field input, .field select{
+    width:100%; padding:12px 14px; border-radius:11px; font-family:inherit; font-size:13px;
+    background:var(--card); border:1px solid var(--line2); color:var(--text); outline:none; transition:border-color .2s;
+  }
+  .field input:focus, .field select:focus{ border-color:var(--pri2); }
+  .form-err{ color:#ff6b6b; font-size:12px; min-height:18px; margin-bottom:8px; }
+
+  /* reveal on scroll */
+  .reveal{ opacity:0; transform:translateY(26px); transition:opacity .8s cubic-bezier(.2,.7,.3,1), transform .8s cubic-bezier(.2,.7,.3,1); }
+  .reveal.in{ opacity:1; transform:none; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  }
+  @media (max-width:1180px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-visual{ margin-top:10px; }
+    .features-grid{ grid-template-columns:repeat(2,1fr); }
+    .feature{ border-left:none; border-top:1px solid var(--line); }
+    .app-window{ grid-template-columns:1fr; }
+    .app-side{ flex-direction:row; flex-wrap:wrap; border-right:none; border-bottom:1px solid var(--line); }
+    .app-privacy{ border-left:none; border-top:1px solid var(--line); }
+    h1{ font-size:42px; }
+  }
+  @media (max-width:640px){
+    .container{ padding:0 18px; }
+    .main-nav{ display:none; }
+    .hero-visual{ flex-direction:column; }
+    .mail-wrap{ margin-top:0; }
+    .features-grid{ grid-template-columns:1fr; }
+    h1{ font-size:34px; }
+    .row-from{ width:120px; }
+    .search-input{ width:110px; } .search-input:focus{ width:140px; }
+    .toasts{ width:calc(100% - 32px); right:16px; }
+  }
+</style>
+</head>
+<body data-theme="dark">
+
+<!-- SVG sprite -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m3 6 9 7 9-7"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 11-12h-7l1-8z"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+  <symbol id="i-inf" viewBox="0 0 24 24"><path d="M12 12c-2-2.67-3.33-4-6-4a4 4 0 1 0 0 8c2.67 0 4-1.33 6-4Zm0 0c2 2.67 3.33 4 6 4a4 4 0 1 0 0-8c-2.67 0-4 1.33-6 4Z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.7 9a.6.6 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-cursor" viewBox="0 0 24 24"><path d="m4 4 7.1 16 2.3-6.6L20 11z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="m7 4 13 8-13 8z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-7 7 7-7 7"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h0a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55h0a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v0a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol>
+  <symbol id="i-wand" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4-4"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18.9 2H22l-6.8 7.8L23.3 22h-6.3l-4.9-6.4L6.4 22H3.3l7.3-8.3L1 2h6.4l4.4 5.9L18.9 2zm-1.1 18h1.7L7.1 3.9H5.3L17.8 20z"/></symbol>
+  <symbol id="i-discord" viewBox="0 0 24 24"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.9 3l-.3.6c1.6.4 2.4 1 3.2 1.7a13.4 13.4 0 0 0-11.7 0c.8-.7 1.7-1.3 3.2-1.7L10 3a19.8 19.8 0 0 0-4.4 1.4C2.8 8.6 2 12.7 2.4 16.8c1.8 1.3 3.5 2.1 5.2 2.6l.8-1.3c-.9-.3-1.7-.7-2.5-1.3l.6-.5c3 1.4 6.3 1.4 9.3 0l.6.5c-.8.6-1.6 1-2.5 1.3l.8 1.3c1.7-.5 3.4-1.3 5.2-2.6.5-4.8-.8-8.9-3.6-12.4ZM8.7 14.3c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8Zm6.6 0c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8Z"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.6.3-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.2.1-2.6 0 0 .8-.3 2.7 1a9.4 9.4 0 0 1 5 0c1.9-1.3 2.7-1 2.7-1 .5 1.4.2 2.4.1 2.6.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .3.3.6.9.6 1.8v2.7c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></symbol>
+  <symbol id="i-telegram" viewBox="0 0 24 24"><path d="M21.9 4.6c.3-1.2-.8-1.8-1.9-1.4L2.7 9.9c-1.2.5-1.1 1.7-.1 2l4.4 1.4 1.7 5.2c.3.8 1.2 1 1.9.4l2.4-2.3 4.5 3.3c.8.4 1.6 0 1.8-.9l2.6-14.4z"/></symbol>
+  <symbol id="i-gmail" viewBox="0 0 24 24"><path fill="#4285F4" d="M3 6.7v10.6c0 .9.7 1.7 1.6 1.7H7V10L3 7V6.7z"/><path fill="#34A853" d="M17 19h2.4c.9 0 1.6-.8 1.6-1.7V6.7L17 10v9z"/><path fill="#EA4335" d="M7 5.2V10l5 3.8L17 10V5.2L12 9 7 5.2z"/><path fill="#C5221F" d="M7 5.2 12 9l5-3.8V5c0-.8-.9-1.3-1.6-.8L12 7 8.6 4.3C7.9 3.7 7 4.2 7 5v.2z"/></symbol>
+</svg>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="#beranda">
+      <span class="brand-logo"><img src="/logo.jpeg" alt="Generator.Email"></span>
+      <span>
+        <div class="brand-name">Generator.<em>Email</em></div>
+        <div class="brand-tag">Temporary Email, Real Freedom</div>
+      </span>
+    </a>
+    <nav class="main-nav">
+      <a href="#beranda" class="active" data-nav>Beranda</a>
+      <a href="#fitur" data-nav>Fitur</a>
+      <a href="#cara-kerja" data-nav>Cara Kerja</a>
+      <a href="#" id="navFaq">FAQ</a>
+    </nav>
+    <div class="header-actions">
+      <button class="theme-toggle" id="themeToggle" title="Ganti tema">
+        <svg class="ic t-sun"><use href="#i-sun"/></svg>
+        <svg class="ic t-moon"><use href="#i-moon"/></svg>
+      </button>
+      <button class="btn btn-primary" id="btnNewTop"><svg class="ic"><use href="#i-plus"/></svg> Buat Email Baru</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="beranda">
+  <canvas class="hero-canvas" id="fx"></canvas>
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <div class="hero-badge">
+        <svg class="ic f"><use href="#i-bolt"/></svg>
+        Email Sementara <span class="dot-sep">•</span> Cepat <span class="dot-sep">•</span> Aman
+      </div>
+      <h1>Buat Email Sementara<br><span class="grad">dalam Hitungan Detik</span></h1>
+      <p class="lead">Generator.Email adalah layanan pembuatan email sementara yang cepat, gratis, dan mudah digunakan. Lindungi privasi Anda saat mendaftar di berbagai layanan online.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary btn-lg" id="btnNewHero">
+          <svg class="ic f"><use href="#i-bolt"/></svg> Buat Email Sekarang <svg class="ic"><use href="#i-arrow"/></svg>
+        </button>
+        <button class="btn btn-ghost btn-lg" id="btnHow"><svg class="ic"><use href="#i-play"/></svg> Lihat Cara Kerja</button>
+      </div>
+      <div class="hero-mini">
+        <div class="item"><svg class="ic f"><use href="#i-bolt"/></svg><div><b>Cepat</b><small>Hanya beberapa detik</small></div></div>
+        <div class="item"><svg class="ic"><use href="#i-shield"/></svg><div><b>Aman</b><small>Tanpa registrasi</small></div></div>
+        <div class="item"><svg class="ic"><use href="#i-inf"/></svg><div><b>Gratis</b><small>Selamanya</small></div></div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="art">
+        <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+        <div class="plane"><svg viewBox="0 0 24 24" fill="currentColor"><use href="#i-telegram"/></svg></div>
+      </div>
+
+      <div class="mail-wrap">
+        <div class="mail-card" id="mailCard">
+          <div class="mail-card-head">
+            <span class="mini-logo"><img src="/logo.jpeg" alt=""></span>
+            <b>Generator.<em>Email</em></b>
+            <span class="pill-active"><span class="dot"></span> Email Aktif</span>
+          </div>
+          <div class="mail-addr">
+            <span id="emailDisplay">Membuat email…</span>
+            <button class="icon-btn" id="btnCopyTop" title="Salin email" style="margin-left:auto"><svg class="ic"><use href="#i-copy"/></svg></button>
+          </div>
+          <div class="mail-timer">
+            <svg class="ic"><use href="#i-clock"/></svg>
+            Berakhir dalam: <b id="countdown">24:00:00</b>
+          </div>
+          <div class="timer-bar"><i id="timerBar"></i></div>
+          <div class="mail-actions">
+            <button class="btn btn-dark" id="btnRefresh"><svg class="ic"><use href="#i-refresh"/></svg> Ganti Email</button>
+            <button class="btn btn-dark" id="btnCopy"><svg class="ic"><use href="#i-copy"/></svg> Salin</button>
+            <button class="btn btn-dark" id="btnCustom" title="Buat email kustom"><svg class="ic"><use href="#i-wand"/></svg> Kustom</button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="notif-panel">
+        <div class="notif-head">
+          <svg class="ic"><use href="#i-bell"/></svg>
+          <span class="dot"></span> Notifikasi Realtime
+          <span class="notif-count" id="notifCount">0</span>
+        </div>
+        <div class="notif-list" id="notifList">
+          <div class="notif-empty"><div class="ring"></div>Menunggu pesan masuk…<br>Notifikasi akan muncul di sini secara realtime.</div>
+        </div>
+        <a class="notif-all" href="#cara-kerja">Lihat semua notifikasi <svg class="ic" style="width:14px;height:14px"><use href="#i-arrow"/></svg></a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="features" id="fitur">
+  <div class="container features-grid">
+    <div class="feature reveal">
+      <div class="feature-ico"><svg class="ic"><use href="#i-cursor"/></svg></div>
+      <div><b>Mudah Digunakan</b><small>Hanya 1 klik, langsung dapat email sementara.</small></div>
+    </div>
+    <div class="feature reveal">
+      <div class="feature-ico"><svg class="ic"><use href="#i-bell"/></svg></div>
+      <div><b>Notifikasi Realtime <span class="badge-new">NEW</span></b><small>Dapatkan notifikasi email masuk secara langsung.</small></div>
+    </div>
+    <div class="feature reveal">
+      <div class="feature-ico"><svg class="ic"><use href="#i-inf"/></svg></div>
+      <div><b>Tanpa Batas</b><small>Buat email baru kapan saja sesuai kebutuhan.</small></div>
+    </div>
+    <div class="feature reveal">
+      <div class="feature-ico"><svg class="ic"><use href="#i-globe"/></svg></div>
+      <div><b>Multi-Domain</b><small>Tersedia berbagai domain pilihan.</small></div>
+    </div>
+    <div class="feature reveal">
+      <div class="feature-ico"><svg class="ic"><use href="#i-shield"/></svg></div>
+      <div><b>Aman &amp; Privat</b><small>Data Anda tidak disimpan di server kami.</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APP / DASHBOARD ============ -->
+<section class="app-section" id="cara-kerja">
+  <div class="container">
+    <div class="app-window reveal">
+      <aside class="app-side">
+        <div class="brand">
+          <span class="brand-logo"><img src="/logo.jpeg" alt=""></span>
+          <div class="brand-name">Generator.<em>Email</em></div>
+        </div>
+        <button class="side-btn active" data-tab="inbox"><svg class="ic"><use href="#i-mail"/></svg> Email Sementara</button>
+        <button class="side-btn" data-tab="history"><svg class="ic"><use href="#i-clock"/></svg> Riwayat</button>
+        <button class="side-btn" data-tab="settings"><svg class="ic"><use href="#i-gear"/></svg> Pengaturan</button>
+        <button class="side-btn" data-tab="about"><svg class="ic"><use href="#i-info"/></svg> Tentang</button>
+      </aside>
+
+      <div class="app-main">
+        <div class="panel show" id="panel-inbox">
+          <div class="active-line"><span class="dot"></span> Email Sementara Aktif</div>
+          <div class="addr-bar">
+            <span class="email" id="dashEmail">—</span>
+            <button class="icon-btn" id="btnCopyDash" title="Salin"><svg class="ic"><use href="#i-copy"/></svg></button>
+            <div class="right">
+              <div class="timer">
+                <svg class="ic"><use href="#i-clock"/></svg>
+                <div>Berakhir hingga<b id="dashCountdown">24:00:00</b></div>
+              </div>
+              <button class="icon-btn" id="btnPollNow" title="Periksa inbox sekarang"><svg class="ic"><use href="#i-refresh"/></svg></button>
+            </div>
+          </div>
+          <div class="inbox-card">
+            <div class="inbox-head">
+              Kotak Masuk <span class="inbox-count" id="inboxCount">0</span>
+              <input class="search-input" id="inboxSearch" placeholder="Cari pesan…" title="Filter pesan">
+              <button class="chev" id="btnCollapse" title="Buka/tutup"><svg class="ic"><use href="#i-chev"/></svg></button>
+            </div>
+            <div class="inbox-list" id="inboxList">
+              <div class="inbox-empty">Kotak masuk kosong — pesan yang masuk akan tampil di sini.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" id="panel-history">
+          <div class="active-line" style="color:var(--pri2)"><svg class="ic" style="width:14px;height:14px"><use href="#i-clock"/></svg> Riwayat Email Anda
+            <button class="icon-btn" id="btnClearHist" title="Hapus semua riwayat" style="margin-left:auto"><svg class="ic"><use href="#i-trash"/></svg></button>
+          </div>
+          <div id="historyList"></div>
+        </div>
+
+        <div class="panel" id="panel-settings">
+          <div class="active-line" style="color:var(--pri2)"><svg class="ic" style="width:14px;height:14px"><use href="#i-gear"/></svg> Pengaturan</div>
+          <div class="set-row">
+            <div>Interval pengecekan inbox<small>Seberapa sering server memeriksa pesan baru</small></div>
+            <select class="sel" id="selInterval">
+              <option value="3" selected>3 detik</option>
+              <option value="5">5 detik</option>
+              <option value="10">10 detik</option>
+            </select>
+          </div>
+          <div class="set-row">
+            <div>Buat email otomatis saat dibuka<small>Langsung menyiapkan email sementara begitu halaman dimuat</small></div>
+            <select class="sel" id="selAuto">
+              <option value="1" selected>Aktif</option>
+              <option value="0">Nonaktif</option>
+            </select>
+          </div>
+          <div class="set-row">
+            <div>Suara notifikasi<small>Bunyi chime saat pesan baru masuk</small></div>
+            <select class="sel" id="selSound">
+              <option value="1" selected>Aktif</option>
+              <option value="0">Nonaktif</option>
+            </select>
+          </div>
+          <div class="set-row">
+            <div>Notifikasi browser<small>Push notification sistem saat pesan baru masuk</small></div>
+            <select class="sel" id="selNotif">
+              <option value="0" selected>Nonaktif</option>
+              <option value="1">Aktif</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="panel" id="panel-about">
+          <div class="active-line" style="color:var(--pri2)"><svg class="ic" style="width:14px;height:14px"><use href="#i-info"/></svg> Tentang</div>
+          <p class="about-txt"><b>Generator.Email</b> adalah layanan pembuatan email sementara yang cepat, gratis, dan mudah digunakan. Lindungi privasi Anda saat mendaftar di berbagai layanan online — tanpa registrasi, tanpa menyimpan data Anda di server kami. Pesan diambil langsung dari jaringan <b>generator.email</b> secara realtime.</p>
+          <div class="stat-chips">
+            <div class="stat-chip"><b id="statCreated">0</b><small>Email dibuat (sesi ini)</small></div>
+            <div class="stat-chip"><b id="statMsgs">0</b><small>Pesan diterima</small></div>
+          </div>
+          <div class="dev-credit"><svg class="ic" style="width:14px;height:14px;color:var(--pri2)"><use href="#i-wand"/></svg> Developed by <em>Van313 | Official</em></div>
+        </div>
+      </div>
+
+      <aside class="app-privacy">
+        <h3>Privasi Anda<br>Adalah Prioritas Kami</h3>
+        <p>Gunakan Generator.Email untuk melindungi identitas Anda saat mendaftar di berbagai layanan online. Cepat, aman, dan tanpa registrasi.</p>
+        <div class="check-list">
+          <div class="li"><span class="check-box"><svg class="ic"><use href="#i-check"/></svg></span> Tanpa registrasi</div>
+          <div class="li"><span class="check-box"><svg class="ic"><use href="#i-check"/></svg></span> Langsung digunakan</div>
+          <div class="li"><span class="check-box"><svg class="ic"><use href="#i-check"/></svg></span> 100% gratis</div>
+        </div>
+        <svg class="priv-art" viewBox="0 0 200 200" fill="none">
+          <defs>
+            <linearGradient id="pg1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#5d4bff"/><stop offset="1" stop-color="#2a1e7a"/>
+            </linearGradient>
+          </defs>
+          <rect x="45" y="60" width="110" height="80" rx="12" fill="url(#pg1)" stroke="#8b7bff" stroke-opacity=".6"/>
+          <path d="M45 72 100 108 155 72" stroke="#b7a6ff" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <rect x="150" y="30" width="30" height="30" rx="8" fill="#fff"/>
+          <path transform="translate(153,33) scale(1.0)" d="M3 6.7v10.6c0 .9.7 1.7 1.6 1.7H7V10L3 7V6.7z M17 19h2.4c.9 0 1.6-.8 1.6-1.7V6.7L17 10v9z M7 5.2V10l5 3.8L17 10V5.2L12 9 7 5.2z" fill="#EA4335"/>
+          <rect x="160" y="78" width="26" height="26" rx="7" fill="#000"/>
+          <path transform="translate(163,81) scale(0.85)" fill="#fff" d="M18.9 2H22l-6.8 7.8L23.3 22h-6.3l-4.9-6.4L6.4 22H3.3l7.3-8.3L1 2h6.4l4.4 5.9L18.9 2zm-1.1 18h1.7L7.1 3.9H5.3L17.8 20z"/>
+          <rect x="150" y="120" width="26" height="26" rx="7" fill="#5865F2"/>
+          <path transform="translate(153,123) scale(0.85)" fill="#fff" d="M20.3 4.4A19.8 19.8 0 0 0 15.9 3l-.3.6c1.6.4 2.4 1 3.2 1.7a13.4 13.4 0 0 0-11.7 0c.8-.7 1.7-1.3 3.2-1.7L10 3a19.8 19.8 0 0 0-4.4 1.4C2.8 8.6 2 12.7 2.4 16.8c1.8 1.3 3.5 2.1 5.2 2.6l.8-1.3c-.9-.3-1.7-.7-2.5-1.3l.6-.5c3 1.4 6.3 1.4 9.3 0l.6.5c-.8.6-1.6 1-2.5 1.3l.8 1.3c1.7-.5 3.4-1.3 5.2-2.6.5-4.8-.8-8.9-3.6-12.4ZM8.7 14.3c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8Zm6.6 0c-.9 0-1.6-.8-1.6-1.8s.7-1.8 1.6-1.8 1.6.8 1.6 1.8-.7 1.8-1.6 1.8Z"/>
+        </svg>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <a class="brand" href="#beranda">
+      <span class="brand-logo"><img src="/logo.jpeg" alt=""></span>
+      <div class="brand-name">Generator.<em>Email</em></div>
+    </a>
+    <span class="foot-tag">Email Sementara &nbsp;•&nbsp; Gratis &nbsp;•&nbsp; Aman</span>
+    <div class="foot-right">
+      <span>Bergabunglah dengan ribuan pengguna di seluruh dunia.</span>
+      <div class="socials">
+        <a href="#" title="Twitter / X"><svg class="ic f"><use href="#i-x"/></svg></a>
+        <a href="#" title="Discord"><svg class="ic f"><use href="#i-discord"/></svg></a>
+        <a href="#" title="Telegram"><svg class="ic f"><use href="#i-telegram"/></svg></a>
+        <a href="#" title="GitHub"><svg class="ic f"><use href="#i-github"/></svg></a>
+      </div>
+      <span class="dev-line">© 2025 Generator.Email • Developed by <b>Van313 | Official</b></span>
+    </div>
+  </div>
+</footer>
+
+<div class="toasts" id="toasts"></div>
+
+<!-- Modal pesan -->
+<div class="modal-ov" id="msgModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="mini-logo"><img src="/logo.jpeg" alt=""></span>
+      <h3>Detail Pesan</h3>
+      <button class="icon-btn" data-close><svg class="ic"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="msg-meta" id="msgMeta"></div>
+    <div class="msg-body" id="msgBody"></div>
+    <div class="msg-codes" id="msgCodes"></div>
+    <div class="msg-links" id="msgLinks"></div>
+  </div>
+</div>
+
+<!-- Modal email kustom -->
+<div class="modal-ov" id="customModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="mini-logo"><img src="/logo.jpeg" alt=""></span>
+      <h3>Buat Email Kustom</h3>
+      <button class="icon-btn" data-close><svg class="ic"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="field">
+      <label for="custUser">Username (opsional — kosongkan untuk acak)</label>
+      <input id="custUser" placeholder="contoh: van313" maxlength="40" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="custDomain">Domain</label>
+      <select id="custDomain"><option value="">Memuat domain…</option></select>
+    </div>
+    <div class="form-err" id="custErr"></div>
+    <button class="btn btn-primary" id="btnCustSubmit" style="width:100%"><svg class="ic f"><use href="#i-bolt"/></svg> Buat Email Kustom</button>
+  </div>
+</div>
+
+<!-- Modal FAQ -->
+<div class="modal-ov" id="faqModal">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="mini-logo"><img src="/logo.jpeg" alt=""></span>
+      <h3>Pertanyaan yang Sering Diajukan</h3>
+      <button class="icon-btn" data-close><svg class="ic"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="faq-item"><b>Apa itu email sementara?</b><p>Email sementara adalah alamat email yang bisa langsung dipakai tanpa registrasi dan berguna untuk menerima pesan verifikasi, kode OTP, atau tautan konfirmasi tanpa membuka identitas asli Anda.</p></div>
+    <div class="faq-item"><b>Apakah gratis?</b><p>Ya, 100% gratis dan tanpa batas. Anda bisa membuat email baru kapan saja sesuai kebutuhan.</p></div>
+    <div class="faq-item"><b>Berapa lama email berlaku?</b><p>Setiap email aktif selama 24 jam sejak dibuat. Setelah itu Anda bisa membuat email baru dengan satu klik.</p></div>
+    <div class="faq-item"><b>Bisa pilih username dan domain sendiri?</b><p>Bisa. Klik tombol <b>Kustom</b> di kartu email, isi username, dan pilih domain yang tersedia.</p></div>
+    <div class="faq-item"><b>Apakah data saya aman?</b><p>Aman. Tidak ada registrasi dan data Anda tidak disimpan di server kami — pesan diambil langsung dari jaringan generator.email secara realtime.</p></div>
+    <div class="faq-item"><b>Siapa developernya?</b><p>Website ini dikembangkan oleh <b>Van313 | Official</b>.</p></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => [...document.querySelectorAll(s)];
+
+  const LS = {
+    get(k, d){ try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+    set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+  };
+
+  const state = {
+    current: LS.get("ge_current", null),
+    history: LS.get("ge_history", []),
+    settings: Object.assign({ interval: 3, auto: 1, sound: 1, notif: 0 }, LS.get("ge_settings", {})),
+    stats: LS.get("ge_stats", { created: 0, msgs: 0 }),
+    known: new Set(),
+    items: [],
+    notif: 0,
+    firstPoll: true,
+    pollTimer: null,
+    busy: false,
+    filter: "",
+    domains: []
+  };
+
+  /* ---------- util ---------- */
+  const api = async (path, opts) => {
+    const res = await fetch(path, opts);
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || data.status === false) throw new Error(data.message || ("HTTP " + res.status));
+    return data;
+  };
+
+  async function copyText(t){
+    try { await navigator.clipboard.writeText(t); return true; }
+    catch {
+      const ta = document.createElement("textarea");
+      ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      let ok = false; try { ok = document.execCommand("copy"); } catch {}
+      ta.remove(); return ok;
+    }
+  }
+
+  const fmtLeft = (ms) => {
+    ms = Math.max(0, ms);
+    const s = Math.floor(ms / 1000);
+    const p = (n) => String(n).padStart(2, "0");
+    return p(Math.floor(s / 3600)) + ":" + p(Math.floor(s / 60) % 60) + ":" + p(s % 60);
+  };
+
+  function brandIcon(from){
+    const f = (from || "").toLowerCase();
+    if (f.includes("discord")) return { cls: "nico-discord", svg: "#i-discord", filled: true };
+    if (f.includes("x.com") || f.includes("twitter")) return { cls: "nico-x", svg: "#i-x", filled: true };
+    if (f.includes("gmail") || f.includes("google")) return { cls: "nico-gmail", svg: "#i-gmail", filled: true };
+    if (f.includes("github")) return { cls: "nico-github", svg: "#i-github", filled: true };
+    return { cls: "nico-mail", svg: "#i-mail", filled: false };
+  }
+
+  function toast(html, isErr){
+    const el = document.createElement("div");
+    el.className = "toast" + (isErr ? " err" : "");
+    el.innerHTML = html;
+    $("#toasts").appendChild(el);
+    while ($("#toasts").children.length > 4) $("#toasts").firstChild.remove();
+    setTimeout(() => { el.style.opacity = "0"; setTimeout(() => el.remove(), 450); }, 6000);
+    return el;
+  }
+
+  /* suara chime (WebAudio, tanpa aset eksternal) */
+  let ac = null;
+  function chime(){
+    if (!state.settings.sound) return;
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      if (ac.state === "suspended") ac.resume();
+      const t = ac.currentTime;
+      [880, 1320].forEach((f, i) => {
+        const o = ac.createOscillator(), g = ac.createGain();
+        o.type = "sine"; o.frequency.value = f;
+        g.gain.setValueAtTime(0.0001, t + i * 0.12);
+        g.gain.exponentialRampToValueAtTime(0.16, t + i * 0.12 + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.12 + 0.35);
+        o.connect(g); g.connect(ac.destination);
+        o.start(t + i * 0.12); o.stop(t + i * 0.12 + 0.4);
+      });
+    } catch {}
+  }
+
+  function browserNotify(it){
+    if (!state.settings.notif) return;
+    try {
+      if ("Notification" in window && Notification.permission === "granted")
+        new Notification("Generator.Email — pesan baru", {
+          body: ((it.from || "") + " — " + (it.subject || "")).slice(0, 120),
+          icon: "/logo.jpeg"
+        });
+    } catch {}
+  }
+
+  /* ---------- render ---------- */
+  function renderEmail(){
+    const em = state.current ? state.current.email : "—";
+    $("#emailDisplay").textContent = em;
+    $("#dashEmail").textContent = em;
+  }
+
+  function renderInbox(){
+    const list = $("#inboxList");
+    const q = state.filter.toLowerCase();
+    const shown = q ? state.items.filter((i) => ((i.from || "") + " " + (i.subject || "")).toLowerCase().includes(q)) : state.items;
+    $("#inboxCount").textContent = shown.length;
+    if (!shown.length) {
+      list.innerHTML = '<div class="inbox-empty">' + (state.items.length ? "Tidak ada pesan yang cocok dengan pencarian." : "Kotak masuk kosong — pesan yang masuk akan tampil di sini.") + "</div>";
+      return;
+    }
+    list.innerHTML = shown.map((it) => `
+      <button class="inbox-row" data-id="${it.id}">
+        <span class="row-ico"><svg class="ic"><use href="#i-mail"/></svg></span>
+        <span class="row-from"></span>
+        <span class="row-subj"></span>
+        <span class="row-time"></span>
+        ${it.unread ? '<span class="badge-baru">Baru</span>' : ""}
+      </button>`).join("");
+    $$("#inboxList .inbox-row").forEach((row, i) => {
+      const it = shown[i];
+      row.querySelector(".row-from").textContent = it.from || "(tanpa pengirim)";
+      row.querySelector(".row-subj").textContent = it.subject || "(tanpa subjek)";
+      row.querySelector(".row-time").textContent = it.time || "";
+      row.addEventListener("click", () => openMsg(it));
+    });
+  }
+
+  function renderNotif(){ $("#notifCount").textContent = state.notif; }
+  function renderStats(){ $("#statCreated").textContent = state.stats.created; $("#statMsgs").textContent = state.stats.msgs; }
+
+  function addNotifItem(it){
+    const empty = $("#notifList .notif-empty");
+    if (empty) empty.remove();
+    const b = brandIcon(it.from);
+    const el = document.createElement("div");
+    el.className = "notif-item";
+    el.innerHTML = `
+      <span class="notif-ico ${b.cls}"><svg class="ic ${b.filled ? "f" : ""}"><use href="${b.svg}"/></svg></span>
+      <div class="notif-body">
+        <div class="t"><b>Email baru diterima</b><time></time></div>
+        <small class="f1"></small>
+        <small class="f2"></small>
+      </div>`;
+    el.querySelector("time").textContent = it.time || "";
+    el.querySelector(".f1").textContent = "Dari: " + (it.from || "-");
+    el.querySelector(".f2").textContent = it.subject || "";
+    el.addEventListener("click", () => openMsg(it));
+    $("#notifList").prepend(el);
+    while ($("#notifList").children.length > 4) $("#notifList").lastChild.remove();
+  }
+
+  function renderHistory(){
+    const box = $("#historyList");
+    if (!state.history.length) { box.innerHTML = '<p class="about-txt">Belum ada riwayat email.</p>'; return; }
+    box.innerHTML = state.history.map((h, i) => `
+      <div class="hist-row">
+        <span class="row-ico"><svg class="ic"><use href="#i-mail"/></svg></span>
+        <div><div class="email"></div><time></time></div>
+        <button class="btn btn-dark" data-i="${i}">Pakai</button>
+        <button class="hist-del" data-del="${i}" title="Hapus"><svg class="ic" style="width:14px;height:14px"><use href="#i-trash"/></svg></button>
+      </div>`).join("");
+    $$("#historyList .hist-row").forEach((row, i) => {
+      const h = state.history[i];
+      row.querySelector(".email").textContent = h.email;
+      row.querySelector("time").textContent = new Date(h.at).toLocaleString("id-ID");
+      row.querySelector("[data-i]").addEventListener("click", () => useEmail(h.email, h.at));
+      row.querySelector("[data-del]").addEventListener("click", () => {
+        state.history.splice(i, 1); LS.set("ge_history", state.history); renderHistory();
+      });
+    });
+  }
+
+  /* ---------- aksi ---------- */
+  function setLoading(btns, on){
+    btns.forEach((b) => {
+      if (on) { b.dataset.html = b.innerHTML; b.disabled = true; b.innerHTML = '<span class="spin"></span> Memproses…'; }
+      else if (b.dataset.html) { b.disabled = false; b.innerHTML = b.dataset.html; }
+    });
+  }
+  const genBtns = () => [$("#btnNewTop"), $("#btnNewHero"), $("#btnRefresh")];
+
+  async function generate(user, domain){
+    if (state.busy) return;
+    state.busy = true;
+    setLoading(genBtns(), true);
+    $("#emailDisplay").textContent = "Membuat email…";
+    try {
+      const r = await api("/api/generate", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ user: user || "", domain: domain || "" })
+      });
+      state.stats.created++; LS.set("ge_stats", state.stats); renderStats();
+      useEmail(r.email, Date.now(), true);
+      const t = toast(`<span class="notif-ico nico-mail"><svg class="ic"><use href="#i-mail"/></svg></span>
+        <div class="notif-body"><div class="t"><b>Email baru siap!</b></div><small></small></div>`);
+      t.querySelector("small").textContent = r.email;
+    } catch (e) {
+      const t = toast(`<span class="notif-ico nico-x"><svg class="ic f"><use href="#i-x"/></svg></span>
+        <div class="notif-body"><div class="t"><b>Gagal membuat email</b></div><small></small></div>`, true);
+      t.querySelector("small").textContent = e.message;
+      renderEmail();
+    } finally {
+      setLoading(genBtns(), false);
+      state.busy = false;
+    }
+  }
+
+  function useEmail(email, at, pushHistory){
+    state.current = { email, at: at || Date.now() };
+    LS.set("ge_current", state.current);
+    if (pushHistory) {
+      state.history = [{ email, at: state.current.at }, ...state.history.filter((h) => h.email !== email)].slice(0, 10);
+      LS.set("ge_history", state.history);
+      renderHistory();
+    }
+    state.known = new Set();
+    state.items = [];
+    state.firstPoll = true;
+    renderEmail();
+    renderInbox();
+    startPolling();
+    tick();
+  }
+
+  async function poll(){
+    if (!state.current) return;
+    try {
+      const box = await api("/api/inbox?email=" + encodeURIComponent(state.current.email));
+      const fresh = [];
+      for (const it of box.items) {
+        if (!it.id || state.known.has(it.id)) continue;
+        state.known.add(it.id);
+        it.unread = true;
+        fresh.push(it);
+      }
+      if (fresh.length) {
+        state.items = [...fresh.slice().reverse(), ...state.items];
+        renderInbox();
+        if (!state.firstPoll) {
+          state.stats.msgs += fresh.length; LS.set("ge_stats", state.stats); renderStats();
+          for (const it of fresh) {
+            state.notif++;
+            addNotifItem(it);
+            chime();
+            browserNotify(it);
+            const b = brandIcon(it.from);
+            const t = toast(`<span class="notif-ico ${b.cls}"><svg class="ic ${b.filled ? "f" : ""}"><use href="${b.svg}"/></svg></span>
+              <div class="notif-body"><div class="t"><b>Email baru diterima</b><time></time></div><small class="f1"></small><small class="f2"></small></div>`);
+            t.querySelector("time").textContent = it.time || "";
+            t.querySelector(".f1").textContent = "Dari: " + (it.from || "-");
+            t.querySelector(".f2").textContent = it.subject || "";
+            t.addEventListener("click", () => openMsg(it));
+          }
+          renderNotif();
+        }
+      }
+      state.firstPoll = false;
+    } catch (e) {
+      /* gangguan jaringan sesaat: polling berikutnya mencoba lagi */
+    }
+  }
+
+  function startPolling(){
+    if (state.pollTimer) clearInterval(state.pollTimer);
+    poll();
+    state.pollTimer = setInterval(poll, Math.max(2, state.settings.interval) * 1000);
+  }
+
+  async function openMsg(it){
+    it.unread = false;
+    renderInbox();
+    const meta = $("#msgMeta"), body = $("#msgBody"), links = $("#msgLinks"), codes = $("#msgCodes");
+    meta.innerHTML = "Memuat pesan…"; body.textContent = ""; links.innerHTML = ""; codes.innerHTML = "";
+    $("#msgModal").classList.add("show");
+    try {
+      const m = await api("/api/message?email=" + encodeURIComponent(state.current.email) + "&id=" + encodeURIComponent(it.id));
+      meta.innerHTML = "";
+      const b = document.createElement("b"); b.textContent = m.subject || "(tanpa subjek)";
+      const f = document.createElement("span"); f.textContent = "Dari: " + (m.from || "-");
+      const t = document.createElement("span"); t.textContent = "Waktu: " + (m.time || "-");
+      meta.append(b, f, t);
+      body.textContent = m.text || "(isi pesan kosong)";
+      // deteksi kode OTP otomatis
+      const found = (m.text.match(/\b\d{4,8}\b/g) || []).slice(0, 3);
+      codes.innerHTML = found.map((c) => `<button class="chip" data-code="${c}"><svg class="ic"><use href="#i-copy"/></svg> Kode: ${c}</button>`).join("");
+      codes.querySelectorAll(".chip").forEach((ch) => ch.addEventListener("click", () => {
+        copyText(ch.dataset.code).then(() => {
+          const t = toast(`<span class="notif-ico nico-mail"><svg class="ic"><use href="#i-copy"/></svg></span>
+            <div class="notif-body"><div class="t"><b>Kode disalin!</b></div><small>${ch.dataset.code}</small></div>`);
+        });
+      }));
+      links.innerHTML = (m.links || []).map((l) => `<a href="${l}" target="_blank" rel="noopener">🔗 ${l}</a>`).join("");
+    } catch (e) {
+      meta.textContent = "Gagal memuat pesan: " + e.message;
+    }
+  }
+
+  /* ---------- countdown ---------- */
+  function tick(){
+    const el1 = $("#countdown"), el2 = $("#dashCountdown"), bar = $("#timerBar");
+    if (!state.current) { el1.textContent = "24:00:00"; el2.textContent = "24:00:00"; bar.style.width = "100%"; return; }
+    const left = 24 * 3600 * 1000 - (Date.now() - state.current.at);
+    const txt = fmtLeft(left);
+    el1.textContent = txt; el2.textContent = txt;
+    bar.style.width = Math.max(0, Math.min(100, left / (24 * 3600 * 10))) + "%";
+  }
+  setInterval(tick, 1000);
+
+  /* ---------- animasi: partikel, tilt, reveal, ripple ---------- */
+  (function particles(){
+    const cv = $("#fx"); if (!cv || !cv.getContext) return;
+    const ctx = cv.getContext("2d");
+    let W, H; const ps = [];
+    const resize = () => { W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight; };
+    resize(); addEventListener("resize", resize);
+    for (let i = 0; i < 42; i++)
+      ps.push({ x: Math.random() * 1200, y: Math.random() * 600, r: Math.random() * 2 + .6, s: Math.random() * .4 + .1, o: Math.random() * .45 + .12 });
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function draw(){
+      ctx.clearRect(0, 0, W, H);
+      for (const p of ps) {
+        p.y -= p.s; if (p.y < -4) { p.y = H + 4; p.x = Math.random() * W; }
+        if (p.x > W) p.x = Math.random() * W;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7);
+        ctx.fillStyle = "rgba(139,124,255," + p.o + ")"; ctx.fill();
+      }
+      if (!reduced) requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  (function tilt(){
+    const card = $("#mailCard"); if (!card) return;
+    card.addEventListener("mousemove", (e) => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      card.style.transform = "rotateY(" + (x * 8).toFixed(2) + "deg) rotateX(" + (-y * 8).toFixed(2) + "deg)";
+    });
+    card.addEventListener("mouseleave", () => { card.style.transform = ""; });
+  })();
+
+  (function reveal(){
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
+    $$(".reveal").forEach((el) => io.observe(el));
+  })();
+
+  document.addEventListener("click", (e) => {
+    const b = e.target.closest(".btn"); if (!b) return;
+    const r = b.getBoundingClientRect();
+    const s = document.createElement("span"); s.className = "ripple";
+    const d = Math.max(r.width, r.height) * 1.6;
+    s.style.width = s.style.height = d + "px";
+    s.style.left = (e.clientX - r.left - d / 2) + "px";
+    s.style.top = (e.clientY - r.top - d / 2) + "px";
+    b.appendChild(s); setTimeout(() => s.remove(), 650);
+  });
+
+  /* ---------- events ---------- */
+  $("#btnNewTop").addEventListener("click", () => generate());
+  $("#btnNewHero").addEventListener("click", () => generate());
+  $("#btnRefresh").addEventListener("click", () => generate());
+  $("#btnPollNow").addEventListener("click", poll);
+  $("#btnHow").addEventListener("click", () => $("#cara-kerja").scrollIntoView({ behavior: "smooth" }));
+
+  const doCopy = () => { if (!state.current) return; copyText(state.current.email).then((ok) => {
+    toast(`<span class="notif-ico nico-mail"><svg class="ic"><use href="#i-copy"/></svg></span>
+      <div class="notif-body"><div class="t"><b>${ok ? "Email disalin!" : "Gagal menyalin"}</b></div><small></small></div>`)
+      .querySelector("small").textContent = state.current.email;
+  }); };
+  $("#btnCopy").addEventListener("click", doCopy);
+  $("#btnCopyTop").addEventListener("click", doCopy);
+  $("#btnCopyDash").addEventListener("click", doCopy);
+
+  $("#btnCollapse").addEventListener("click", () => {
+    const l = $("#inboxList");
+    l.style.display = l.style.display === "none" ? "" : "none";
+  });
+
+  $("#inboxSearch").addEventListener("input", (e) => { state.filter = e.target.value; renderInbox(); });
+
+  // tabs sidebar
+  $$(".side-btn").forEach((b) => b.addEventListener("click", () => {
+    $$(".side-btn").forEach((x) => x.classList.remove("active"));
+    b.classList.add("active");
+    $$(".app-main .panel").forEach((p) => p.classList.remove("show"));
+    $("#panel-" + b.dataset.tab).classList.add("show");
+    if (b.dataset.tab === "history") renderHistory();
+    if (b.dataset.tab === "about") renderStats();
+  }));
+
+  $("#btnClearHist").addEventListener("click", () => {
+    state.history = []; LS.set("ge_history", state.history); renderHistory();
+  });
+
+  // pengaturan
+  $("#selInterval").value = String(state.settings.interval);
+  $("#selAuto").value = String(state.settings.auto);
+  $("#selSound").value = String(state.settings.sound);
+  $("#selNotif").value = String(state.settings.notif);
+  $("#selInterval").addEventListener("change", (e) => { state.settings.interval = +e.target.value; LS.set("ge_settings", state.settings); startPolling(); });
+  $("#selAuto").addEventListener("change", (e) => { state.settings.auto = +e.target.value; LS.set("ge_settings", state.settings); });
+  $("#selSound").addEventListener("change", (e) => { state.settings.sound = +e.target.value; LS.set("ge_settings", state.settings); });
+  $("#selNotif").addEventListener("change", (e) => {
+    state.settings.notif = +e.target.value; LS.set("ge_settings", state.settings);
+    if (state.settings.notif && "Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission().catch(() => {});
+    }
+  });
+
+  // email kustom
+  async function loadDomains(){
+    const sel = $("#custDomain");
+    if (state.domains.length) return;
+    try {
+      const r = await api("/api/domains");
+      state.domains = r.domains || [];
+      sel.innerHTML = state.domains.map((d) => `<option value="${d}">${d}</option>`).join("") || '<option value="">acak</option>';
+    } catch (e) {
+      sel.innerHTML = '<option value="">acak (gagal memuat daftar)</option>';
+    }
+  }
+  $("#btnCustom").addEventListener("click", () => { $("#customModal").classList.add("show"); $("#custErr").textContent = ""; loadDomains(); });
+  $("#btnCustSubmit").addEventListener("click", async () => {
+    const u = $("#custUser").value.trim();
+    const d = $("#custDomain").value;
+    $("#custErr").textContent = "";
+    $("#customModal").classList.remove("show");
+    await generate(u, d);
+  });
+  $("#custUser").addEventListener("keydown", (e) => { if (e.key === "Enter") $("#btnCustSubmit").click(); });
+
+  // tema
+  const applyTheme = (t) => document.body.dataset.theme = t;
+  applyTheme(LS.get("ge_theme", "dark"));
+  $("#themeToggle").addEventListener("click", () => {
+    const t = document.body.dataset.theme === "dark" ? "light" : "dark";
+    applyTheme(t); LS.set("ge_theme", t);
+  });
+
+  // nav active
+  $$("[data-nav]").forEach((a) => a.addEventListener("click", () => {
+    $$("[data-nav]").forEach((x) => x.classList.remove("active"));
+    a.classList.add("active");
+  }));
+
+  // modal
+  $("#navFaq").addEventListener("click", (e) => { e.preventDefault(); $("#faqModal").classList.add("show"); });
+  $$(".modal-ov").forEach((ov) => {
+    ov.addEventListener("click", (e) => { if (e.target === ov) ov.classList.remove("show"); });
+    ov.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", () => ov.classList.remove("show")));
+  });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") $$(".modal-ov.show").forEach((ov) => ov.classList.remove("show")); });
+
+  /* ---------- init ---------- */
+  renderEmail();
+  renderInbox();
+  renderHistory();
+  renderNotif();
+  renderStats();
+  tick();
+  if (state.current && 24 * 3600 * 1000 - (Date.now() - state.current.at) > 0) {
+    startPolling();
+  } else if (state.settings.auto) {
+    generate();
+  }
+})();
+</script>
+</body>
+</html>
